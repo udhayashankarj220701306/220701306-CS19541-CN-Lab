@@ -35,7 +35,10 @@ int main()
     int k=len;
     int bin[k];
     for(int i=0;i<k;i++)bin[i]=s[i]-'0';
+    printf("Binary = ");
     print(bin,k);
+
+    // Finding no of redundant bit
     int r=0,twos=len;
     while(twos){
         twos/=2;
@@ -57,10 +60,12 @@ int main()
     int pos=k-r-1;
     int p=0;
     t=1;
+    // Appling humming code
     for(int i=1;i<k+1;i++){  
         if(i==t) {t*=2;rv+=bin[k-i]<< p;p++ ;}
         else ans[pos--]=bin[k-i];
     }
+    printf("Binary after removing redundant bits = ");
     print(ans,k-r);
     pos=k-r;
     if(rv!=0)printf("Error at %d",rv);
@@ -70,6 +75,6 @@ int main()
         for(int i=0;i<pos/8;i++)
             fprintf(fptr,"%c", dans[i]);
         fclose(fptr);
-        printf("%s",dans);
+        printf("String = %s\n",dans);
     }
 }

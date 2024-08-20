@@ -14,13 +14,13 @@ int main()
     fptr = fopen("sender.txt", "r");
     fseek(fptr, 0, SEEK_END);
     long int size = ftell(fptr);
-    printf("%d",size);
+    printf("File size = %d\n",size);
     fseek(fptr, 0, SEEK_SET);
     char s[size+1];
     fread (s, 1, size, fptr);
     s[size]='\0'; 
     fclose(fptr);
-    printf("%s\n",s);
+    printf("String = %s\n",s);
 
     // Converting anscii to binary
     size_t len = strlen(s);
@@ -32,6 +32,7 @@ int main()
         for(int j = 7; j >= 0; --j)
             bin[i*8+(7-j)]=(ch & (1 << j)?1:0);
     }
+    printf("Binary = ");
     print(bin,k);
 
     // Finding no. of redundant bits
@@ -40,7 +41,7 @@ int main()
         twos*=2;
         r++;
     }
-    printf("%d\n%d\n",k,r);
+    printf("k = %d\nr = %d\n",k,r);
 
     // Adding redundant bits
     int ans[k+r];
@@ -51,6 +52,7 @@ int main()
         if(i==t) t*=2;
         else ans[k+r-i]=bin[pos--];
     }
+    printf("Binary without finding redundant bits = ");
     print(ans,k+r);
   
     // Applying Humming code
@@ -58,11 +60,12 @@ int main()
     for(int i=1;i<=r;i++){
         int c=0;
         for(int j=1;j<k+r+1;j++)
-            if((j&t)&&ans[k+r-j]){c++;printf("%d\n",j);}
-        printf("%d\n",c);
+            if((j&t)&&ans[k+r-j]){c++;}
+        // printf("%d\n",c);
         ans[k+r-t]=c%2;
         t*=2;
     }
+    printf("Binary with finding redundant bits    = ");
     print(ans,k+r);
 
     // sending the result in channel
