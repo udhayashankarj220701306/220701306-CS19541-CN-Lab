@@ -69,7 +69,7 @@ int main()
     print(ans,k+r);
 
     // sending the result in channel
-    fopen("channel.txt","w");
+    fptr=fopen("channel.txt","w");
     for(int i=0;i<k+r;i++)
         fprintf(fptr,"%d", ans[i]);
     fclose(fptr);

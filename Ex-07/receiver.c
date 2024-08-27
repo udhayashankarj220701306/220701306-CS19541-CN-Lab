@@ -16,7 +16,7 @@ bool between(int a, int b, int c)
 }
 
 void send_frame(int frame_no,int frame_expected,char data,int* pos){
-    FILE* fptr=fopen("senderBuff.txt","a");
+    FILE* fptr=fopen("receiverBuff.txt","a");
     fseek(fptr, 0, *pos);
     F s;
     s.seq_no=frame_no;
@@ -28,6 +28,7 @@ void send_frame(int frame_no,int frame_expected,char data,int* pos){
     printf("Sender: %d\n",*pos);
     fclose(fptr);
     
+    
 }
 void inc(int* a){
     (*a)++;
@@ -35,7 +36,7 @@ void inc(int* a){
 }
 
 bool receive_frame(F* r,int* pos){
-    FILE* fptr=fopen("receiverBuff.txt","r");
+    FILE* fptr=fopen("senderBuff.txt","r");
     fseek(fptr, 0, SEEK_END); 
     if(*pos==ftell(fptr))return false;
     *pos = ftell(fptr);
@@ -51,7 +52,7 @@ int main(){
     // printf("Enter the maximum sequence no:");
     // scanf("%d",&MAX_SEQ);
     FILE *fptr;
-    fptr = fopen("sender_sending.txt", "r");
+    fptr = fopen("receiver_sending.txt", "r");
     fseek(fptr, 0, SEEK_END);
     long int size = ftell(fptr);
     printf("File size = %d\n",size);
@@ -72,9 +73,7 @@ int main(){
     bool arrived[buff_size];
     for(int i=0;i<buff_size;i++)
         arrived[i]=false;
-    
-    
-    FILE* sender_received=fopen("sender_received.txt","w");
+    FILE* sender_received=fopen("receiver_received.txt","w");
     int send_buff=0,receive_buff=0;
     F r;
     int i=0;
@@ -82,12 +81,6 @@ int main(){
     printf("Started\n");
     while(true){
         f=true;
-        if(i<size){
-            send_frame(next_frame_to_send,frame_exp,s[i++],&send_buff);
-            inc(&next_frame_to_send);
-            f=false;
-        } 
-        Sleep(10000);
         if(receive_frame(&r,&receive_buff)){
             if(between(frame_exp,r.seq_no,window_boundary)&&arrived[r.seq_no%buff_size]==false){
                 arrived[r.seq_no%buff_size]=true;
@@ -102,11 +95,16 @@ int main(){
             f=false;
             printf("%d %d %c\n",r.seq_no,r.ack_no,r.info);
         }
+        if(i<size){
+            send_frame(next_frame_to_send,frame_exp,s[i++],&send_buff);
+            inc(&next_frame_to_send);
+            
+            f=false;
+        } 
+        Sleep(10000);
         if(f)break;
 
     }
-    
-    
     fclose(sender_received);
     // char a;
     // scanf("%c",&a);
