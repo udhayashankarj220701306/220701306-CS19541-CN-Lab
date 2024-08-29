@@ -31,7 +31,7 @@ void send_frame(int frame_no,int frame_expected,char data,int* pos){
 }
 void inc(int* a){
     (*a)++;
-    (*a)%=MAX_SEQ;
+    (*a)%=(MAX_SEQ+1);
 }
 
 bool receive_frame(F* r,int* pos){
